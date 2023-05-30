@@ -1,3 +1,6 @@
+use scraper::Html;
+use scraper::html::Html as HtmlStruct;
+
 #[derive(Debug)]
 pub struct Product {
     pub id: Option<String>,
@@ -13,4 +16,15 @@ pub enum ScrapeError {
     ParseSelectorError,
     RetrieveElementNodeError,
     ParseElementNodeError,
+}
+
+pub fn parse_document_from_url(url: &str) -> Result<HtmlStruct, ScrapeError> {
+    let response = reqwest::blocking::get(url)
+        .map_err(|_| ScrapeError::RequestError)?;
+
+    let response_string = response
+        .text()
+        .map_err(|_| ScrapeError::ParseRequestError)?;
+
+    Ok(Html::parse_document(&response_string))
 }
