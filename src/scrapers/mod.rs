@@ -1,4 +1,4 @@
-use scraper::{Html, Selector};
+use scraper::{Html, Selector, ElementRef};
 use scraper::html::Html as HtmlStruct;
 
 #[derive(Debug)]
@@ -34,4 +34,15 @@ pub fn parse_selector(selector_string: &str) -> Result<Selector, ScrapeError> {
         .map_err(|_| ScrapeError::ParseSelectorError)?;
 
     Ok(selector)
+}
+
+pub fn get_first_text_from_parent_element<'a>(
+    selector: &Selector,
+    parent_element: ElementRef<'a>
+) -> Result<&'a str, ScrapeError> {
+    parent_element
+        .select(selector)
+        .next()
+        .and_then(|element| element.text().next())
+        .ok_or(ScrapeError::RetrieveElementNodeError)
 }
