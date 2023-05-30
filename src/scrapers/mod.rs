@@ -1,3 +1,5 @@
+pub mod tokopedia;
+
 use scraper::{Html, Selector, ElementRef};
 use scraper::html::Html as HtmlStruct;
 
