@@ -1,4 +1,4 @@
-use scraper::Html;
+use scraper::{Html, Selector};
 use scraper::html::Html as HtmlStruct;
 
 #[derive(Debug)]
@@ -27,4 +27,11 @@ pub fn parse_document_from_url(url: &str) -> Result<HtmlStruct, ScrapeError> {
         .map_err(|_| ScrapeError::ParseRequestError)?;
 
     Ok(Html::parse_document(&response_string))
+}
+
+pub fn parse_selector(selector_string: &str) -> Result<Selector, ScrapeError> {
+    let selector = Selector::parse(selector_string)
+        .map_err(|_| ScrapeError::ParseSelectorError)?;
+
+    Ok(selector)
 }
