@@ -26,6 +26,7 @@ pub fn get_products(search_query: &str) -> Result<Vec<Product>, ScrapeError> {
             product_element
         )?
             .replace("Rp", "")
+            .replace(".", "")
             .parse::<i32>()
             .map_err(|_| ScrapeError::ParseElementNodeError)?;
 
