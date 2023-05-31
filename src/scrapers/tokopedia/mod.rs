@@ -7,7 +7,20 @@ use crate::scrapers::get_first_text_from_parent_element;
 pub fn get_products(search_query: &str) -> Result<Vec<Product>, ScrapeError> {
     let mut products: Vec<Product> = Vec::new();
 
-    let url = format!("https://www.tokopedia.com/search?st=product&ob=3&q={}", &search_query);
+    let unformatted_url = "
+        https://www.tokopedia.com/search
+            ?st=product
+            &shop_tier=3%232%231
+            &pmin=31000
+            &q=
+    ";
+
+    let mut url = unformatted_url
+        .trim()
+        .replace(" ", "");
+
+    url.push_str(search_query);
+
     let document = parse_document_from_url(&url)?;
 
     let products_selector = parse_selector(r#"div[class="pcv3__container css-gfx8z3"]"#)?;
