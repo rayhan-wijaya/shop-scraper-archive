@@ -4,9 +4,9 @@ use crate::scrapers::parse_document_from_url;
 use crate::scrapers::parse_selector;
 use crate::scrapers::get_first_text_from_parent_element;
 
-pub fn get_products(search_query: &str) -> Result<Vec<Product>, ScrapeError> {
+pub fn get_tokopedia_products(search_query: &str) -> Result<Vec<Product>, ScrapeError> {
     let mut products: Vec<Product> = Vec::new();
-
+    
     let unformatted_url = "
         https://www.tokopedia.com/search
             ?st=product
