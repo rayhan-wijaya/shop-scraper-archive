@@ -23,12 +23,12 @@ pub fn get_tokopedia_products(search_query: &str) -> Result<Vec<Product>, Scrape
 
     let document = parse_document_from_url(&url)?;
 
-    let products_selector = parse_selector(r#"div[class="pcv3__container css-gfx8z3"]"#)?;
+    let product_selector = parse_selector(r#"div[class="pcv3__container css-gfx8z3"]"#)?;
     let product_name_selector = parse_selector(r#"div[class="prd_link-product-name css-3um8ox"]"#)?;
     let product_price_selector = parse_selector(r#"div[class="prd_link-product-price css-1ksb19c"]"#)?;
     let product_stars_selector = parse_selector(r#"span[class="prd_rating-average-text css-t70v7i"]"#)?;
 
-    for product_element in document.select(&products_selector) {
+    for product_element in document.select(&product_selector) {
         let product_name = get_first_text_from_parent_element(
             &product_name_selector,
             product_element
