@@ -12,14 +12,13 @@ pub fn get_tokopedia_products(search_query: &str) -> Result<Vec<Product>, Scrape
             ?st=product
             &shop_tier=3%232%231
             &pmin=31000
-            &q=
+            &q=%s
     ";
 
-    let mut url = unformatted_url
+    let url = unformatted_url
         .trim()
-        .replace(" ", "");
-
-    url.push_str(search_query);
+        .replace(" ", "")
+        .replace("%s", search_query);
 
     let document = parse_document_from_url(&url)?;
 
