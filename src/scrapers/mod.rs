@@ -1,4 +1,5 @@
 pub mod tokopedia;
+pub mod blibli;
 
 use scraper::{Html, Selector, ElementRef};
 use scraper::html::Html as HtmlStruct;
