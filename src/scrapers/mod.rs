@@ -39,7 +39,7 @@ pub fn parse_selector(selector_string: &str) -> Result<Selector, ScrapeError> {
     Ok(selector)
 }
 
-pub fn get_first_text_from_parent_element<'a>(
+pub fn get_first_text_from_selector<'a>(
     selector: &Selector,
     parent_element: ElementRef<'a>
 ) -> Result<&'a str, ScrapeError> {
