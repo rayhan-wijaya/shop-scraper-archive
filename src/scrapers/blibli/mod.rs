@@ -2,7 +2,7 @@ use crate::scrapers::Product;
 use crate::scrapers::ScrapeError;
 use crate::scrapers::parse_document_from_url;
 use crate::scrapers::parse_selector;
-use crate::scrapers::get_first_text_from_selector;
+use crate::scrapers::get_first_text_from_parent_element_selector;
 
 pub fn get_blibli_products(search_query: &str) -> Result<Vec<Product>, ScrapeError> {
     let mut products: Vec<Product> = Vec::new();
@@ -24,12 +24,12 @@ pub fn get_blibli_products(search_query: &str) -> Result<Vec<Product>, ScrapeErr
     let product_stars_selector = parse_selector(r#"span[class="product__body__rating__stars__rating"]"#)?;
 
     for product_element in document.select(&product_selector) {
-        let product_name = get_first_text_from_selector(
+        let product_name = get_first_text_from_parent_element_selector(
             &product_name_selector,
             product_element
         )?;
 
-        let product_price_in_idr = get_first_text_from_selector(
+        let product_price_in_idr = get_first_text_from_parent_element_selector(
             &product_price_selector,
             product_element
         )?
@@ -38,7 +38,7 @@ pub fn get_blibli_products(search_query: &str) -> Result<Vec<Product>, ScrapeErr
             .parse::<i32>()
             .map_err(|_| ScrapeError::ParseElementNodeError)?;
 
-        let product_stars_text = get_first_text_from_selector(
+        let product_stars_text = get_first_text_from_parent_element_selector(
             &product_stars_selector,
             product_element
         );
