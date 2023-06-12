@@ -1,12 +1,11 @@
+use scraper::html::Html;
 use crate::scrapers::Product;
 use crate::scrapers::ScrapeError;
 use crate::scrapers::parse_document_from_url;
 use crate::scrapers::parse_selector;
 use crate::scrapers::get_first_text_from_parent_element_selector;
 
-pub fn get_bukalapak_products(search_query: &str) -> Result<Vec<Product>, ScrapeError> {
-    let mut products: Vec<Product> = Vec::new();
-    
+pub fn parse_bukalapak_document(search_query: &str) -> Result<Html, ScrapeError> {
     let unformatted_url = "
         https://www.bukalapak.com/products
             ?search%5Bkeywords%5D=%s
@@ -19,8 +18,13 @@ pub fn get_bukalapak_products(search_query: &str) -> Result<Vec<Product>, Scrape
         .replace(" ", "")
         .replace("%s", search_query);
 
-    let document = parse_document_from_url(&url)?;
+    parse_document_from_url(&url)
+}
 
+pub fn get_bukalapak_products(search_query: &str) -> Result<Vec<Product>, ScrapeError> {
+    let mut products: Vec<Product> = Vec::new();
+    let document = parse_bukalapak_document(search_query)?;
+    
     let product_selector = parse_selector(r#"div[class="bl-product-card-new__wrapper"]"#)?;
     let product_name_selector = parse_selector(r#"p[class="bl-text bl-text--body-14 bl-text--secondary bl-text--ellipsis__2"]"#)?;
     let product_price_selector = parse_selector(r#"p[class="bl-text bl-text--semi-bold bl-text--ellipsis__1 bl-product-card-new__price"]"#)?;
