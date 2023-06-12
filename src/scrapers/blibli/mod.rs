@@ -20,7 +20,7 @@ pub fn parse_blibli_document(search_query: &str) -> Result<Html, ScrapeError> {
 
 pub fn get_blibli_products(search_query: &str) -> Result<Vec<Product>, ScrapeError> {
     let mut products: Vec<Product> = Vec::new();
-    let document = parse_blibli_document(search_query);
+    let document = parse_blibli_document(search_query)?;
 
     let product_selector = parse_selector(r#"div[class="product__item-container"]"#)?;
     let product_name_selector = parse_selector(r#"div[class="product__title"]"#)?;
