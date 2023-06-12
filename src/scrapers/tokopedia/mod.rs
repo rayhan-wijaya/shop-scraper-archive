@@ -1,12 +1,11 @@
+use scraper::html::Html;
 use crate::scrapers::Product;
 use crate::scrapers::ScrapeError;
 use crate::scrapers::parse_document_from_url;
 use crate::scrapers::parse_selector;
 use crate::scrapers::get_first_text_from_parent_element_selector;
 
-pub fn get_tokopedia_products(search_query: &str) -> Result<Vec<Product>, ScrapeError> {
-    let mut products: Vec<Product> = Vec::new();
-    
+pub fn parse_tokopedia_document(search_query: &str) -> Result<Html, ScrapeError> {
     let unformatted_url = "
         https://www.tokopedia.com/search
             ?st=product
@@ -20,8 +19,13 @@ pub fn get_tokopedia_products(search_query: &str) -> Result<Vec<Product>, Scrape
         .replace(" ", "")
         .replace("%s", search_query);
 
-    let document = parse_document_from_url(&url)?;
+    parse_document_from_url(&url)
+}
 
+pub fn get_tokopedia_products(search_query: &str) -> Result<Vec<Product>, ScrapeError> {
+    let mut products: Vec<Product> = Vec::new();
+    let document = parse_tokopedia_document(search_query)?;
+    
     let product_selector = parse_selector(r#"div[class="pcv3__container css-gfx8z3"]"#)?;
     let product_name_selector = parse_selector(r#"div[class="prd_link-product-name css-3um8ox"]"#)?;
     let product_price_selector = parse_selector(r#"div[class="prd_link-product-price css-1ksb19c"]"#)?;
