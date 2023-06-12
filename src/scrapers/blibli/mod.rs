@@ -1,12 +1,11 @@
+use scraper::html::Html;
 use crate::scrapers::Product;
 use crate::scrapers::ScrapeError;
 use crate::scrapers::parse_document_from_url;
 use crate::scrapers::parse_selector;
 use crate::scrapers::get_first_text_from_parent_element_selector;
 
-pub fn get_blibli_products(search_query: &str) -> Result<Vec<Product>, ScrapeError> {
-    let mut products: Vec<Product> = Vec::new();
-
+pub fn parse_blibli_document(search_query: &str) -> Result<Html, ScrapeError> {
     let unformatted_url = "
         https://www.blibli.com/cari/%s
     ";
@@ -16,7 +15,12 @@ pub fn get_blibli_products(search_query: &str) -> Result<Vec<Product>, ScrapeErr
         .replace("%s", search_query)
         .replace(" ", "");
 
-    let document = parse_document_from_url(&url)?;
+    parse_document_from_url(&url)
+}
+
+pub fn get_blibli_products(search_query: &str) -> Result<Vec<Product>, ScrapeError> {
+    let mut products: Vec<Product> = Vec::new();
+    let document = parse_blibli_document(search_query);
 
     let product_selector = parse_selector(r#"div[class="product__item-container"]"#)?;
     let product_name_selector = parse_selector(r#"div[class="product__title"]"#)?;
