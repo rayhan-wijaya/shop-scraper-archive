@@ -10,18 +10,10 @@ impl From<InvalidToken> for anyhow::Error {
 #[derive(tide::prelude::Deserialize)]
 struct GetCheapestProductQuery {
     product_name: String,
-    token: String,
 }
 
 pub async fn get(req: tide::Request<()>) -> tide::Result<String> {
     let query: GetCheapestProductQuery = req.query()?;
-
-    let original_token = std::env::var("TOKEN")?;
-    let do_tokens_match = original_token == query.token;
-
-    if !do_tokens_match {
-        return Err(tide::Error::new(403, InvalidToken));
-    }
 
     Ok(format!("You got a product! {}", query.product_name))
 }
