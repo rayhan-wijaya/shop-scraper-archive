@@ -2,9 +2,6 @@ pub mod tokopedia;
 pub mod blibli;
 pub mod bukalapak;
 
-use scraper::{Html, Selector, ElementRef};
-use scraper::html::Html as HtmlStruct;
-
 #[derive(Debug)]
 pub struct Product {
     pub id: Option<String>,
@@ -22,7 +19,7 @@ pub enum ScrapeError {
     ParseElementNodeError,
 }
 
-pub fn parse_document_from_url(url: &str) -> Result<HtmlStruct, ScrapeError> {
+pub fn parse_document_from_url(url: &str) -> Result<scraper::Html, ScrapeError> {
     let response = reqwest::blocking::get(url)
         .map_err(|_| ScrapeError::RequestError)?;
 
@@ -30,19 +27,19 @@ pub fn parse_document_from_url(url: &str) -> Result<HtmlStruct, ScrapeError> {
         .text()
         .map_err(|_| ScrapeError::ParseRequestError)?;
 
-    Ok(Html::parse_document(&response_string))
+    Ok(scraper::Html::parse_document(&response_string))
 }
 
-pub fn parse_selector(selector_string: &str) -> Result<Selector, ScrapeError> {
-    let selector = Selector::parse(selector_string)
+pub fn parse_selector(selector_string: &str) -> Result<scraper::Selector, ScrapeError> {
+    let selector = scraper::Selector::parse(selector_string)
         .map_err(|_| ScrapeError::ParseSelectorError)?;
 
     Ok(selector)
 }
 
 pub fn get_first_text_from_parent_element_selector<'a>(
-    selector: &Selector,
-    parent_element: ElementRef<'a>
+    selector: &scraper::Selector,
+    parent_element: scraper::ElementRef<'a>
 ) -> Option<&'a str> {
     parent_element
         .select(selector)
