@@ -43,10 +43,9 @@ pub fn parse_selector(selector_string: &str) -> Result<Selector, ScrapeError> {
 pub fn get_first_text_from_parent_element_selector<'a>(
     selector: &Selector,
     parent_element: ElementRef<'a>
-) -> Result<&'a str, ScrapeError> {
+) -> Option<&'a str> {
     parent_element
         .select(selector)
         .next()
         .and_then(|element| element.text().next())
-        .ok_or(ScrapeError::RetrieveElementNodeError)
 }
