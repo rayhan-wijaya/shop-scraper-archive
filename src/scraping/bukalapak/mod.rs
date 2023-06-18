@@ -1,11 +1,4 @@
-use scraper::html::Html;
-use crate::scraping::Product;
-use crate::scraping::ScrapeError;
-use crate::scraping::parse_document_from_url;
-use crate::scraping::parse_selector;
-use crate::scraping::get_first_text_from_parent_element_selector;
-
-pub fn parse_bukalapak_document(search_query: &str) -> Result<Html, ScrapeError> {
+pub fn parse_bukalapak_document(search_query: &str) -> Result<scraper::Html, super::ScrapeError> {
     let unformatted_url = "
         https://www.bukalapak.com/products
             ?search%5Bkeywords%5D=%s
@@ -18,43 +11,44 @@ pub fn parse_bukalapak_document(search_query: &str) -> Result<Html, ScrapeError>
         .replace(" ", "")
         .replace("%s", search_query);
 
-    parse_document_from_url(&url)
+    super::parse_document_from_url(&url)
 }
 
-pub fn get_bukalapak_products(search_query: &str) -> Result<Vec<Product>, ScrapeError> {
-    let mut products: Vec<Product> = Vec::new();
+pub fn get_bukalapak_products(search_query: &str) -> Result<Vec<super::Product>, super::ScrapeError> {
+    let mut products: Vec<super::Product> = Vec::new();
     let document = parse_bukalapak_document(search_query)?;
     
-    let product_selector = parse_selector(r#"div[class="bl-product-card-new__wrapper"]"#)?;
-    let product_name_selector = parse_selector(r#"p[class="bl-text bl-text--body-14 bl-text--secondary bl-text--ellipsis__2"]"#)?;
-    let product_price_selector = parse_selector(r#"p[class="bl-text bl-text--semi-bold bl-text--ellipsis__1 bl-product-card-new__price"]"#)?;
-    let product_stars_selector = parse_selector(r#"p[class="bl-text bl-text--caption-12 bl-text--bold"]"#)?;
-    let bukalapak_link_selector = parse_selector(r#"a[class="bl-link"]"#)?;
+    let product_selector = super::parse_selector(r#"div[class="bl-product-card-new__wrapper"]"#)?;
+    let product_name_selector = super::parse_selector(r#"p[class="bl-text bl-text--body-14 bl-text--secondary bl-text--ellipsis__2"]"#)?;
+    let product_price_selector = super::parse_selector(r#"p[class="bl-text bl-text--semi-bold bl-text--ellipsis__1 bl-product-card-new__price"]"#)?;
+    let product_stars_selector = super::parse_selector(r#"p[class="bl-text bl-text--caption-12 bl-text--bold"]"#)?;
+    let bukalapak_link_selector = super::parse_selector(r#"a[class="bl-link"]"#)?;
 
     for product_element in document.select(&product_selector) {
         let product_name_wrapper_element = product_element
             .select(&product_name_selector)
             .next()
-            .ok_or(ScrapeError::RetrieveElementNodeError)?;
+            .ok_or(super::ScrapeError::RetrieveElementNodeError)?;
 
         let product_name_element = product_name_wrapper_element
             .select(&bukalapak_link_selector)
             .next()
-            .ok_or(ScrapeError::RetrieveElementNodeError)?;
+            .ok_or(super::ScrapeError::RetrieveElementNodeError)?;
 
         let product_name = product_name_element
             .text()
             .next()
-            .ok_or(ScrapeError::RetrieveElementNodeError)?;
+            .ok_or(super::ScrapeError::RetrieveElementNodeError)?;
 
-        let product_price_in_idr = get_first_text_from_parent_element_selector(
+        let product_price_in_idr = super::get_first_text_from_parent_element_selector(
             &product_price_selector,
             product_element
-        )?
+        )
+            .ok_or(super::ScrapeError::RetrieveElementNodeError)?
             .replace("Rp", "")
             .replace(".", "")
             .parse::<i32>()
-            .map_err(|_| ScrapeError::ParseElementNodeError)?;
+            .map_err(|_| super::ScrapeError::ParseElementNodeError)?;
 
         let product_stars_text = get_first_text_from_parent_element_selector(
             &product_stars_selector,
@@ -73,7 +67,7 @@ pub fn get_bukalapak_products(search_query: &str) -> Result<Vec<Product>, Scrape
             Err(_) => {},
         }
 
-        products.push(Product {
+        products.push(super::Product {
             id: None,
             name: String::from(product_name),
             price_in_idr: product_price_in_idr,
