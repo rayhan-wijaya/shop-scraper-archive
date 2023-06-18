@@ -35,33 +35,28 @@ pub fn get_tokopedia_products(search_query: &str) -> Result<Vec<Product>, Scrape
         let product_name = get_first_text_from_parent_element_selector(
             &product_name_selector,
             product_element
-        )?;
+        )
+            .ok_or(ScrapeError::RetrieveElementNodeError)?;
 
         let product_price_in_idr = get_first_text_from_parent_element_selector(
             &product_price_selector,
             product_element
-        )?
+        )
+            .ok_or(ScrapeError::RetrieveElementNodeError)?
             .replace("Rp", "")
             .replace(".", "")
             .parse::<i32>()
             .map_err(|_| ScrapeError::ParseElementNodeError)?;
 
-        let product_stars_text = get_first_text_from_parent_element_selector(
+        let product_stars = get_first_text_from_parent_element_selector(
             &product_stars_selector,
             product_element
-        );
-
-        let mut product_stars = None;
-
-        // TODO: Refrain from using `match { ... Err(_) => {} }`
-        match product_stars_text {
-            Ok(product_stars_text) => {
-                product_stars = product_stars_text
+        )
+            .and_then(|product_stars_text| {
+                product_stars_text
                     .parse::<f32>()
-                    .ok();
-            },
-            Err(_) => {},
-        }
+                    .ok()
+            });
 
         products.push(Product {
             id: None,
