@@ -42,17 +42,15 @@ pub fn get_blibli_products(search_query: &str) -> Result<Vec<super::Product>, su
             product_element
         );
 
-        let mut product_stars = None;
-
-        // TODO: Refrain from using `match { ... Err(_) => {} }`
-        match product_stars_text {
-            Ok(product_stars_text) => {
-                product_stars = product_stars_text
+        let product_stars = super::get_first_text_from_parent_element_selector(
+            &product_stars_selector,
+            product_element
+        )
+            .and_then(|product_stars_text| {
+                product_stars_text
                     .parse::<f32>()
-                    .ok();
-            },
-            Err(_) => {},
-        }
+                    .ok()
+            });
 
         products.push(super::Product {
             id: None,
