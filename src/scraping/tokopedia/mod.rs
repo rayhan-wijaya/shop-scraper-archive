@@ -1,4 +1,4 @@
-pub fn parse_tokopedia_document(search_query: &str) -> Result<scraper::Html, super::ScrapeError> {
+pub fn parse_document(search_query: &str) -> Result<scraper::Html, super::ScrapeError> {
     let unformatted_url = "
         https://www.tokopedia.com/search
             ?st=product
@@ -15,9 +15,9 @@ pub fn parse_tokopedia_document(search_query: &str) -> Result<scraper::Html, sup
     super::parse_document_from_url(&url)
 }
 
-pub fn get_tokopedia_products(search_query: &str) -> Result<Vec<super::Product>, super::ScrapeError> {
+pub fn get_products(search_query: &str) -> Result<Vec<super::Product>, super::ScrapeError> {
     let mut products: Vec<super::Product> = Vec::new();
-    let document = parse_tokopedia_document(search_query)?;
+    let document = parse_document(search_query)?;
 
     let product_selector = super::parse_selector(r#"div[class="pcv3__container css-gfx8z3"]"#)?;
     let product_name_selector = super::parse_selector(r#"div[class="prd_link-product-name css-3um8ox"]"#)?;
