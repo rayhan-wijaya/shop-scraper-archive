@@ -1,4 +1,4 @@
-pub fn parse_bukalapak_document(search_query: &str) -> Result<scraper::Html, super::ScrapeError> {
+pub fn parse_document(search_query: &str) -> Result<scraper::Html, super::ScrapeError> {
     let unformatted_url = "
         https://www.bukalapak.com/products
             ?search%5Bkeywords%5D=%s
@@ -14,9 +14,9 @@ pub fn parse_bukalapak_document(search_query: &str) -> Result<scraper::Html, sup
     super::parse_document_from_url(&url)
 }
 
-pub fn get_bukalapak_products(search_query: &str) -> Result<Vec<super::Product>, super::ScrapeError> {
+pub fn get_products(search_query: &str) -> Result<Vec<super::Product>, super::ScrapeError> {
     let mut products: Vec<super::Product> = Vec::new();
-    let document = parse_bukalapak_document(search_query)?;
+    let document = parse_document(search_query)?;
     
     let product_selector = super::parse_selector(r#"div[class="bl-product-card-new__wrapper"]"#)?;
     let product_name_selector = super::parse_selector(r#"p[class="bl-text bl-text--body-14 bl-text--secondary bl-text--ellipsis__2"]"#)?;
