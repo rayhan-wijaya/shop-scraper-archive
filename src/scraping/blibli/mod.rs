@@ -1,4 +1,4 @@
-pub fn parse_blibli_document(search_query: &str) -> Result<scraper::Html, super::ScrapeError> {
+pub fn parse_document(search_query: &str) -> Result<scraper::Html, super::ScrapeError> {
     let unformatted_url = "
         https://www.blibli.com/cari/%s
     ";
@@ -11,9 +11,9 @@ pub fn parse_blibli_document(search_query: &str) -> Result<scraper::Html, super:
     super::parse_document_from_url(&url)
 }
 
-pub fn get_blibli_products(search_query: &str) -> Result<Vec<super::Product>, super::ScrapeError> {
+pub fn get_products(search_query: &str) -> Result<Vec<super::Product>, super::ScrapeError> {
     let mut products: Vec<super::Product> = Vec::new();
-    let document = parse_blibli_document(search_query)?;
+    let document = parse_document(search_query)?;
 
     let product_selector = super::parse_selector(r#"div[class="product__item-container"]"#)?;
     let product_name_selector = super::parse_selector(r#"div[class="product__title"]"#)?;
