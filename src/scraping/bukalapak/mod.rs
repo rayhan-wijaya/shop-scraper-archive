@@ -50,22 +50,15 @@ pub fn get_bukalapak_products(search_query: &str) -> Result<Vec<super::Product>,
             .parse::<i32>()
             .map_err(|_| super::ScrapeError::ParseElementNodeError)?;
 
-        let product_stars_text = get_first_text_from_parent_element_selector(
+        let product_stars = super::get_first_text_from_parent_element_selector(
             &product_stars_selector,
             product_element
-        );
-
-        let mut product_stars = None;
-
-        // TODO: Refrain from using `match { ... Err(_) => {} }`
-        match product_stars_text {
-            Ok(product_stars_text) => {
-                product_stars = product_stars_text
+        )
+            .and_then(|product_stars_text| {
+                product_stars_text
                     .parse::<f32>()
-                    .ok();
-            },
-            Err(_) => {},
-        }
+                    .ok()
+            });
 
         products.push(super::Product {
             id: None,
