@@ -1,4 +1,5 @@
 mod api;
+mod scraping;
 
 #[async_std::main]
 async fn main() {
