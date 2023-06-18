@@ -1,9 +1,9 @@
 use scraper::html::Html;
-use crate::scrapers::Product;
-use crate::scrapers::ScrapeError;
-use crate::scrapers::parse_document_from_url;
-use crate::scrapers::parse_selector;
-use crate::scrapers::get_first_text_from_parent_element_selector;
+use crate::scraping::Product;
+use crate::scraping::ScrapeError;
+use crate::scraping::parse_document_from_url;
+use crate::scraping::parse_selector;
+use crate::scraping::get_first_text_from_parent_element_selector;
 
 pub fn parse_blibli_document(search_query: &str) -> Result<Html, ScrapeError> {
     let unformatted_url = "

@@ -1,2 +1,2 @@
-pub mod scrapers;
+pub mod scraping;
 pub mod api;
