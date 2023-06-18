@@ -19,9 +19,7 @@ pub fn get_tokopedia_products(search_query: &str) -> Result<Vec<super::Product>,
     let mut products: Vec<super::Product> = Vec::new();
     let document = parse_tokopedia_document(search_query)?;
 
-    let product_selector_string = r#"div[class="pcv3__container css-gfx8z3"]"#;
-
-    let product_selector = super::parse_selector(product_selector_string)?;
+    let product_selector = super::parse_selector(r#"div[class="pcv3__container css-gfx8z3"]"#)?;
     let product_name_selector = super::parse_selector(r#"div[class="prd_link-product-name css-3um8ox"]"#)?;
     let product_price_selector = super::parse_selector(r#"div[class="prd_link-product-price css-1ksb19c"]"#)?;
     let product_stars_selector = super::parse_selector(r#"span[class="prd_rating-average-text css-t70v7i"]"#)?;
