@@ -56,5 +56,7 @@ pub async fn post(req: tide::Request<()>) -> tide::Result {
         return Err(tide::Error::new(403, InvalidToken));
     }
 
+    // TODO: Implement cheapest product DB caching
+
     return Ok(tide::Response::new(200));
 }
