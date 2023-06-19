@@ -7,6 +7,18 @@ impl From<InvalidToken> for anyhow::Error {
     }
 }
 
+impl From<scraping::ScrapeError> for anyhow::Error {
+    fn from(value: scraping::ScrapeError) -> Self {
+        match value {
+            super::ScrapeError::RequestError => anyhow::Error::msg("Failed to request"),
+            super::ScrapeError::ParseRequestError => anyhow::Error::msg("Failed to parse request"),
+            super::ScrapeError::ParseSelectorError => anyhow::Error::msg("Failed to parse a selector"),
+            super::ScrapeError::ParseElementNodeError => anyhow::Error::msg("Failed to parse an element node"),
+            super::ScrapeError::RetrieveElementNodeError => anyhow::Error::msg("Failed to retrieve an element node"),
+        }
+    }
+}
+
 #[derive(tide::prelude::Deserialize)]
 struct GetCheapestProductQuery {
     product_name: String,
