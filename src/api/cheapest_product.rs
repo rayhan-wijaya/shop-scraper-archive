@@ -29,6 +29,9 @@ struct GetCheapestProductQuery {
 pub async fn get(req: tide::Request<()>) -> tide::Result<serde_json::Value> {
     let query: GetCheapestProductQuery = req.query()?;
 
+    // TODO: This should lookup the database for the cheapest products before computing the
+    // final product
+
     let tokopedia_products = scraping::tokopedia::get_products(&query.product_name)?;
 
     let mut products = Vec::new();
