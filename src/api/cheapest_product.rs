@@ -31,12 +31,14 @@ pub async fn get(req: tide::Request<()>) -> tide::Result<serde_json::Value> {
 
     let tokopedia_products = scraping::tokopedia::get_products(&query.product_name)?;
 
-    let products = Vec::new()
-        .extend(tokopedia_products);
+    let mut products = Vec::new();
+    products.extend(tokopedia_products.into_iter());
 
-    let products_json = serde_json::to_value(products)?;
+    let cheapest_product = products
+        .iter()
+        .min_by(|a, b| a.price_in_idr.cmp(&b.price_in_idr));
 
-    Ok(products_json)
+    Ok(serde_json::to_value(cheapest_product)?)
 }
 
 #[derive(tide::prelude::Deserialize)]
