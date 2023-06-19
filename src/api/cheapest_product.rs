@@ -1,3 +1,5 @@
+use crate::scraping;
+
 #[derive(Debug)]
 struct InvalidToken;
 
@@ -10,11 +12,11 @@ impl From<InvalidToken> for anyhow::Error {
 impl From<scraping::ScrapeError> for anyhow::Error {
     fn from(value: scraping::ScrapeError) -> Self {
         match value {
-            super::ScrapeError::RequestError => anyhow::Error::msg("Failed to request"),
-            super::ScrapeError::ParseRequestError => anyhow::Error::msg("Failed to parse request"),
-            super::ScrapeError::ParseSelectorError => anyhow::Error::msg("Failed to parse a selector"),
-            super::ScrapeError::ParseElementNodeError => anyhow::Error::msg("Failed to parse an element node"),
-            super::ScrapeError::RetrieveElementNodeError => anyhow::Error::msg("Failed to retrieve an element node"),
+            scraping::ScrapeError::RequestError => anyhow::Error::msg("Failed to request"),
+            scraping::ScrapeError::ParseRequestError => anyhow::Error::msg("Failed to parse request"),
+            scraping::ScrapeError::ParseSelectorError => anyhow::Error::msg("Failed to parse a selector"),
+            scraping::ScrapeError::ParseElementNodeError => anyhow::Error::msg("Failed to parse an element node"),
+            scraping::ScrapeError::RetrieveElementNodeError => anyhow::Error::msg("Failed to retrieve an element node"),
         }
     }
 }
@@ -24,10 +26,17 @@ struct GetCheapestProductQuery {
     product_name: String,
 }
 
-pub async fn get(req: tide::Request<()>) -> tide::Result<String> {
+pub async fn get(req: tide::Request<()>) -> tide::Result<serde_json::Value> {
     let query: GetCheapestProductQuery = req.query()?;
 
-    Ok(format!("You got a product! {}", query.product_name))
+    let tokopedia_products = scraping::tokopedia::get_products(&query.product_name)?;
+
+    let products = Vec::new()
+        .extend(tokopedia_products);
+
+    let products_json = serde_json::to_value(products)?;
+
+    Ok(products_json)
 }
 
 #[derive(tide::prelude::Deserialize)]
