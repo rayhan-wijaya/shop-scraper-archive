@@ -2,7 +2,7 @@ pub mod tokopedia;
 pub mod blibli;
 pub mod bukalapak;
 
-#[derive(Debug)]
+#[derive(Debug, serde::Serialize)]
 pub struct Product {
     pub id: Option<String>,
     pub name: String,
