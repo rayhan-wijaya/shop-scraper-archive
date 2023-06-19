@@ -37,7 +37,7 @@ pub fn parse_selector(selector_string: &str) -> Result<scraper::Selector, Scrape
     Ok(selector)
 }
 
-pub fn get_first_text_from_parent_element_selector<'a>(
+pub fn get_first_text_from_selector<'a>(
     selector: &scraper::Selector,
     parent_element: scraper::ElementRef<'a>
 ) -> Option<&'a str> {

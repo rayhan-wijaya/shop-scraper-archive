@@ -40,7 +40,7 @@ pub fn get_products(search_query: &str) -> Result<Vec<super::Product>, super::Sc
             .next()
             .ok_or(super::ScrapeError::RetrieveElementNodeError)?;
 
-        let product_price_in_idr = super::get_first_text_from_parent_element_selector(
+        let product_price_in_idr = super::get_first_text_from_selector(
             &product_price_selector,
             product_element
         )
@@ -50,7 +50,7 @@ pub fn get_products(search_query: &str) -> Result<Vec<super::Product>, super::Sc
             .parse::<i32>()
             .map_err(|_| super::ScrapeError::ParseElementNodeError)?;
 
-        let product_stars = super::get_first_text_from_parent_element_selector(
+        let product_stars = super::get_first_text_from_selector(
             &product_stars_selector,
             product_element
         )

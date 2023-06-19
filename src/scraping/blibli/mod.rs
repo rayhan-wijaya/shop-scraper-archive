@@ -21,13 +21,13 @@ pub fn get_products(search_query: &str) -> Result<Vec<super::Product>, super::Sc
     let product_stars_selector = super::parse_selector(r#"span[class="product__body__rating__stars__rating"]"#)?;
 
     for product_element in document.select(&product_selector) {
-        let product_name = super::get_first_text_from_parent_element_selector(
+        let product_name = super::get_first_text_from_selector(
             &product_name_selector,
             product_element
         )
             .ok_or(super::ScrapeError::RetrieveElementNodeError)?;
 
-        let product_price_in_idr = super::get_first_text_from_parent_element_selector(
+        let product_price_in_idr = super::get_first_text_from_selector(
             &product_price_selector,
             product_element
         )
@@ -37,12 +37,12 @@ pub fn get_products(search_query: &str) -> Result<Vec<super::Product>, super::Sc
             .parse::<i32>()
             .map_err(|_| super::ScrapeError::ParseElementNodeError)?;
 
-        let product_stars_text = super::get_first_text_from_parent_element_selector(
+        let product_stars_text = super::get_first_text_from_selector(
             &product_stars_selector,
             product_element
         );
 
-        let product_stars = super::get_first_text_from_parent_element_selector(
+        let product_stars = super::get_first_text_from_selector(
             &product_stars_selector,
             product_element
         )
