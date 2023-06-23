@@ -16,8 +16,8 @@ pub fn parse_document(search_query: &str) -> Result<scraper::Html, super::Scrape
     super::parse_document_from_url(&url)
 }
 
-pub fn get_products(search_query: &str) -> Result<Vec<super::Product>, super::ScrapeError> {
-    let mut products: Vec<super::Product> = Vec::new();
+pub fn get_products(search_query: &str) -> Result<Vec<data::Product>, super::ScrapeError> {
+    let mut products: Vec<data::Product> = Vec::new();
     let document = parse_document(search_query)?;
     
     let product_selector = super::parse_selector(r#"div[class="bl-product-card-new__wrapper"]"#)?;
@@ -62,7 +62,7 @@ pub fn get_products(search_query: &str) -> Result<Vec<super::Product>, super::Sc
                     .ok()
             });
 
-        products.push(super::Product {
+        products.push(data::Product {
             id: None,
             name: String::from(product_name),
             price_in_idr: product_price_in_idr,
