@@ -1,3 +1,5 @@
+use crate::data;
+
 pub fn parse_document(search_query: &str) -> Result<scraper::Html, super::ScrapeError> {
     let unformatted_url = "
         https://www.bukalapak.com/products
