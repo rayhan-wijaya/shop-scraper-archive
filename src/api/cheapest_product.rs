@@ -11,12 +11,14 @@ impl From<InvalidToken> for anyhow::Error {
 
 impl From<scraping::ScrapeError> for anyhow::Error {
     fn from(value: scraping::ScrapeError) -> Self {
+        use scraping::ScrapeError;
+
         let message = match value {
-            scraping::ScrapeError::RequestError => "Failed to request",
-            scraping::ScrapeError::ParseRequestError => "Failed to parse request",
-            scraping::ScrapeError::ParseSelectorError => "Failed to parse a selector",
-            scraping::ScrapeError::ParseElementNodeError => "Failed to parse an element node",
-            scraping::ScrapeError::RetrieveElementNodeError => "Failed to retrieve an element node",
+            ScrapeError::RequestError => "Failed to request",
+            ScrapeError::ParseRequestError => "Failed to parse request",
+            ScrapeError::ParseSelectorError => "Failed to parse a selector",
+            ScrapeError::ParseElementNodeError => "Failed to parse an element node",
+            ScrapeError::RetrieveElementNodeError => "Failed to retrieve an element node",
         };
 
         anyhow::Error::msg(message)
