@@ -48,7 +48,7 @@ pub async fn post(req: tide::Request<()>) -> tide::Result {
     let query: PostCheapestProductQuery = req.query()?;
     let original_token = std::env::var("TOKEN")?;
 
-    if !(original_token == query.token) {
+    if original_token != query.token {
         return Err(tide::Error::new(403, InvalidToken));
     }
 
