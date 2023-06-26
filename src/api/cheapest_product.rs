@@ -34,15 +34,6 @@ pub async fn get(req: tide::Request<()>) -> tide::Result<serde_json::Value> {
     // TODO: This should lookup the database for the cheapest products before computing the
     // final product
 
-    let tokopedia_products = scraping::tokopedia::get_products(&query.product_name)?;
-
-    let mut products = Vec::new();
-    products.extend(tokopedia_products.into_iter());
-
-    let cheapest_product = products
-        .iter()
-        .min_by(|a, b| a.price_in_idr.cmp(&b.price_in_idr));
-
     Ok(serde_json::to_value(cheapest_product)?)
 }
 
