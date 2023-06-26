@@ -54,5 +54,5 @@ pub async fn post(req: tide::Request<()>) -> tide::Result {
 
     // TODO: Implement cheapest product DB caching
 
-    return Ok(tide::Response::new(200));
+    Ok(tide::Response::new(200))
 }
