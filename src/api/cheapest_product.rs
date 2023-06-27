@@ -11,13 +11,17 @@ impl From<InvalidToken> for anyhow::Error {
 
 impl From<scraping::ScrapeError> for anyhow::Error {
     fn from(value: scraping::ScrapeError) -> Self {
-        match value {
-            scraping::ScrapeError::RequestError => anyhow::Error::msg("Failed to request"),
-            scraping::ScrapeError::ParseRequestError => anyhow::Error::msg("Failed to parse request"),
-            scraping::ScrapeError::ParseSelectorError => anyhow::Error::msg("Failed to parse a selector"),
-            scraping::ScrapeError::ParseElementNodeError => anyhow::Error::msg("Failed to parse an element node"),
-            scraping::ScrapeError::RetrieveElementNodeError => anyhow::Error::msg("Failed to retrieve an element node"),
-        }
+        use scraping::ScrapeError;
+
+        let message = match value {
+            ScrapeError::RequestError => "Failed to request",
+            ScrapeError::ParseRequestError => "Failed to parse request",
+            ScrapeError::ParseSelectorError => "Failed to parse a selector",
+            ScrapeError::ParseElementNodeError => "Failed to parse an element node",
+            ScrapeError::RetrieveElementNodeError => "Failed to retrieve an element node",
+        };
+
+        anyhow::Error::msg(message)
     }
 }
 
@@ -42,15 +46,13 @@ struct PostCheapestProductQuery {
 
 pub async fn post(req: tide::Request<()>) -> tide::Result {
     let query: PostCheapestProductQuery = req.query()?;
-
     let original_token = std::env::var("TOKEN")?;
-    let do_tokens_match = original_token == query.token;
 
-    if !do_tokens_match {
+    if original_token != query.token {
         return Err(tide::Error::new(403, InvalidToken));
     }
 
     // TODO: Implement cheapest product DB caching
 
-    return Ok(tide::Response::new(200));
+    Ok(tide::Response::new(200))
 }
