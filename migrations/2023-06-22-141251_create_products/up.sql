@@ -1,6 +1,6 @@
 -- Your SQL goes here
 
-CREATE TABLE `products`
+CREATE TABLE `product`
 (
   `id` MEDIUMINT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(50) NOT NULL,
