@@ -1,5 +1,6 @@
 mod api;
 mod scraping;
+
 use dotenvy::dotenv;
 
 #[async_std::main]
