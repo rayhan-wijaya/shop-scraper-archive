@@ -1,6 +1,6 @@
 mod cheapest_product;
 
-pub async fn serve() -> tide::Result<()> {
+pub async fn serve() -> std::io::Result<()> {
     let mut app = tide::new();
 
     app.at("/cheapest_product")
