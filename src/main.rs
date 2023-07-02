@@ -7,5 +7,10 @@ use dotenvy::dotenv;
 async fn main() {
     dotenv().ok();
 
-    let _ = api::serve().await;
+    let apiServeResult = api::serve().await;
+
+    match apiServeResult {
+        Ok(_) => { println!("API running as expected") },
+        Err(_) => { println!("There was an error in starting the API") },
+    }
 }
