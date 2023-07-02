@@ -31,12 +31,12 @@ struct GetCheapestProductQuery {
 }
 
 pub async fn get(req: tide::Request<()>) -> tide::Result<serde_json::Value> {
-    let query: GetCheapestProductQuery = req.query()?;
+    // let query: GetCheapestProductQuery = req.query()?;
 
     // TODO: This should lookup the database for the cheapest products before computing the
     // final product
 
-    Ok(serde_json::to_value(cheapest_product)?)
+    todo!()
 }
 
 #[derive(tide::prelude::Deserialize)]
